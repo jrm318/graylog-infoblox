@@ -1,0 +1,62 @@
+{
+  "extractors": [
+    {
+      "title": "InfoBlox DHCP Discover",
+      "extractor_type": "grok",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "",
+      "extractor_config": {
+        "grok_pattern": "%{IPV4:serverip} (?<processname>[^\\[]*)\\[%{BASE10NUM:pid}\\]: %{WORD:dhcptype} from %{COMMONMAC:macaddr}(\\s\\(%{HOSTNAME:hostname}\\))? via (%{IPV4:dhcprelay}|(?<interface>eth[\\d+]))%{GREEDYDATA:UNWANTED}"
+      },
+      "condition_type": "string",
+      "condition_value": "DHCPDISCOVER"
+    },
+    {
+      "title": "InfoBlox DHCP Request",
+      "extractor_type": "grok",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "",
+      "extractor_config": {
+        "grok_pattern": "%{IPV4:serverip} (?<processname>[^\\[]*)\\[%{BASE10NUM:pid}\\]: %{WORD:dhcptype} for %{IPV4:ipaddr} from %{COMMONMAC:macaddr}(\\s\\(%{HOSTNAME:hostname}\\))? via (%{IPV4:dhcprelay}|(?<interface>eth[\\d+]))%{GREEDYDATA:UNWANTED}",
+        "named_captures_only": false
+      },
+      "condition_type": "string",
+      "condition_value": "DHCPREQUEST"
+    },
+    {
+      "title": "InfoBlox DHCP Offer",
+      "extractor_type": "grok",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "",
+      "extractor_config": {
+        "grok_pattern": "%{IPV4:serverip} (?<processname>[^\\[]*)\\[%{BASE10NUM:pid}\\]:[\\s+]%{WORD:dhcptype} on %{IPV4:ipaddr} to %{COMMONMAC:macaddr}(\\s\\(%{HOSTNAME:hostname}\\))? via (?<interface>eth[\\d+]) relay %{IPV4:dhcprelay} lease-duration %{INT:lease-duration} offered-duration %{INT:offered-duration}"
+      },
+      "condition_type": "string",
+      "condition_value": "DHCPOFFER"
+    },
+    {
+      "title": "InfoBlox DHCP Acknowledge",
+      "extractor_type": "grok",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "",
+      "extractor_config": {
+        "grok_pattern": "%{IPV4:serverip} (?<processname>[^\\[]*)\\[%{BASE10NUM:pid}\\]:[\\s+]%{WORD:dhcptype} on %{IPV4:ipaddr} to %{COMMONMAC:macaddr}(\\s\\(%{HOSTNAME:hostname}\\))? via (?<interface>eth[\\d+]) relay (%{IPV4:dhcprelay}|(?<interface>eth[\\d+])) lease-duration %{INT:lease-duration}"
+      },
+      "condition_type": "string",
+      "condition_value": "DHCPACK"
+    }
+  ],
+  "version": "3.2.4"
+}
